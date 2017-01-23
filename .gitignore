@@ -9,4 +9,4 @@ obj/Debug/apartment-menu.pdb
 *.ts
 bin/Debug/GTANetworkServer.exe
 Properties/AssemblyInfo.cs
-bin
+obj
