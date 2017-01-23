@@ -1,0 +1,5 @@
+﻿<meta>
+    <info name="Apartment Menu" author="Pringus" type="script" />
+    <script src="aptmenu_server.cs" type="server" lang="csharp" />
+	<script src="aptmenu_client.js" type="client" lang="javascript" />
+</meta>
