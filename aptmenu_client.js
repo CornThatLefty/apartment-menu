@@ -8,10 +8,12 @@ let menu = API.createMenu("Apartments", 0, 0, 6);
 let menu1 = API.createMenu("Floor 1", 0, 0, 6);
 let menu2 = API.createMenu("Floor 2", 0, 0, 6);
 let menu3 = API.createMenu("Floor 3", 0, 0, 6);
+let menu4 = API.createMenu("Arcadius Building", 0, 0, 6);
 
 let sub1 = API.createMenuItem("Floor 1", "");
 let sub2 = API.createMenuItem("Floor 2", "");
 let sub3 = API.createMenuItem("Floor 3", "");
+let sub4 = API.createMenuItem("Arcadius Building", "");
 
 let item1 = API.createMenuItem("Modern Apartment", "Floor 1");
 let item2 = API.createMenuItem("Modern Apartment", "Floor 2");
@@ -40,9 +42,12 @@ let item22 = API.createMenuItem("Aqua Apartment ", "Floor 1");
 let item23 = API.createMenuItem("Aqua Apartment ", "Floor 2");
 let item24 = API.createMenuItem("Aqua Apartment ", "Floor 3");
 
+let item25 = API.createMenuItem("Executive Rich", "Executive Office");
+
 menu.AddItem(sub1);
 menu.AddItem(sub2);
 menu.AddItem(sub3);
+menu.AddItem(sub4);
 
 menu1.AddItem(item1);
 menu2.AddItem(item2);
@@ -69,6 +74,8 @@ menu1.AddItem(item22);
 menu2.AddItem(item23);
 menu3.AddItem(item24);
 
+menu4.AddItem(item25);
+
 
 let keyDetect = false;
 
@@ -78,6 +85,7 @@ menuPool.Add(menu);
 menuPool.Add(menu1);
 menuPool.Add(menu2);
 menuPool.Add(menu3);
+menuPool.Add(menu4);
 
 menu1.OnItemSelect.connect(function(sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
     switch (item) {
@@ -169,6 +177,15 @@ menu3.OnItemSelect.connect(function (sender, item, index) { //Prefix explanation
     menu3.Visible = false;
 });
 
+menu4.OnItemSelect.connect(function (sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
+    switch (item) {
+        case item25:
+            API.triggerServerEvent("loadApt401");
+            break;
+    }
+    menu4.Visible = false;
+});
+
 menu.OnItemSelect.connect(function (sender, item, index) {
     switch (item) {
         case sub1:
@@ -182,6 +199,10 @@ menu.OnItemSelect.connect(function (sender, item, index) {
         case sub3: 
             menu.Visible = false;
             menu3.Visible = true;
+            break;
+        case sub4:
+            menu.Visible = false;
+            menu4.Visible = true;
             break;
     }
     API.showCursor(false);

@@ -7,40 +7,38 @@ using GTANetworkServer;
 using GTANetworkShared;
 using System.Threading;
 
-//test
+//Todo: Function for unloading apartments.
 
 public class apartment_menu : Script
 {
-    //Variable declaration
-    string[] fl01_List = new string[]
+
+    string[,] aptArray = new string[,] //fuck you, we're going multi-dimensional, man!
     {
-        null, "apa_v_mp_h_01_a", "apa_v_mp_h_02_a", "apa_v_mp_h_03_a", "apa_v_mp_h_04_a", "apa_v_mp_h_05_a", "apa_v_mp_h_06_a", "apa_v_mp_h_07_a", "apa_v_mp_h_08_a"
+        {"", "", "", "", "", "", "", "", "", ""}, //floor 0
+        {"", "apa_v_mp_h_01_a", "apa_v_mp_h_02_a", "apa_v_mp_h_03_a", "apa_v_mp_h_04_a", "apa_v_mp_h_05_a", "apa_v_mp_h_06_a", "apa_v_mp_h_07_a", "apa_v_mp_h_08_a", ""}, //floor 1
+        {"", "apa_v_mp_h_01_c", "apa_v_mp_h_02_c", "apa_v_mp_h_03_c", "apa_v_mp_h_04_c", "apa_v_mp_h_05_c", "apa_v_mp_h_06_c", "apa_v_mp_h_07_c", "apa_v_mp_h_08_c", ""}, //floor 2
+        {"", "apa_v_mp_h_01_b", "apa_v_mp_h_02_b", "apa_v_mp_h_03_b", "apa_v_mp_h_04_b", "apa_v_mp_h_05_b", "apa_v_mp_h_06_b", "apa_v_mp_h_07_b", "apa_v_mp_h_08_b", ""}, //floor 3
+        {"", "ex_dt1_02_office_02b", "ex_dt1_02_office_02c", "ex_dt1_02_office_02a", "ex_dt1_02_office_01a", "ex_dt1_02_office_01b", "ex_dt1_02_office_01c", "ex_dt1_02_office_03a", "ex_dt1_02_office_03b", "ex_dt1_02_office_03c"}, //floor 3
     };
 
-    string[] fl02_List = new string[]
+    Vector3[] aptPos = new Vector3[]
     {
-        null, "apa_v_mp_h_01_c", "apa_v_mp_h_02_c", "apa_v_mp_h_03_c", "apa_v_mp_h_04_c", "apa_v_mp_h_05_c", "apa_v_mp_h_06_c", "apa_v_mp_h_07_c", "apa_v_mp_h_08_c"
-    };
-
-    string[] fl03_List = new string[]
-    {
-        null, "apa_v_mp_h_01_b", "apa_v_mp_h_02_b", "apa_v_mp_h_03_b", "apa_v_mp_h_04_b", "apa_v_mp_h_05_b", "apa_v_mp_h_06_b", "apa_v_mp_h_07_b", "apa_v_mp_h_08_b"
+        new Vector3(0, 0, 0), new Vector3(-786.8663, 315.7642, 216.6385), new Vector3(-786.9563, 315.6229, 186.9136), new Vector3(-774.0126, 342.0428, 195.6864), new Vector3(-141.19, -620.91, 168.82)
     };
 
     int[] occupation = new int[]
     {
-        0, 0, 0, 0  //Amount of players in each floor. Incriments with players entering floors
+        0, 0, 0, 0, 0, 0, 0  //Amount of players in each floor. Incriments with players entering floors.
     };
 
-    int[] currFloor = new int[]
+    int[] currAptIndex = new int[]
     {
-        0, 0, 0, 0
+        0, 0, 0, 0, 0, 0, 0 //Index of the current in-use apartment
     };
 
     Vector3 frontDoor = new Vector3(-773.915, 311.579, 84.698);
-    Vector3 apa1 = new Vector3(-786.8663, 315.7642, 216.6385); //1
-    Vector3 apa2 = new Vector3(-786.9563, 315.6229, 186.9136); //2
-    Vector3 apa3 = new Vector3(-774.0126, 342.0428, 195.6864);//3
+
+
                                                             
     //End variable declaration -------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -53,18 +51,16 @@ public class apartment_menu : Script
     public apartment_menu()
     {
         var apt_colShape = API.createCylinderColShape(frontDoor, 2, 2); //Create Initial Collision shape
-        var fl1_colShape = API.createCylinderColShape(apa1, 1f, 2); //floor 1 col shape
-        var fl2_colShape = API.createCylinderColShape(apa2, 1f, 2); //floor 2 col shape
-        var fl3_colShape = API.createCylinderColShape(apa3, 1f, 2); //floor 3 col shape
-
+        var fl1_colShape = API.createCylinderColShape(aptPos[1], 1f, 2); //floor 1 col shape
+        var fl2_colShape = API.createCylinderColShape(aptPos[2], 1f, 2); //floor 2 col shape
+        var fl3_colShape = API.createCylinderColShape(aptPos[3], 1f, 2); //floor 3 col shape
+        var fl4_colShape = API.createCylinderColShape(aptPos[3], 1f, 2);
         apt_colShape.onEntityEnterColShape += apt_enterColShape; //Enter init col shape
         apt_colShape.onEntityExitColShape += apt_exitColShape; //Exit init col shape
-
         fl1_colShape.onEntityEnterColShape += fl1_entercolShape; //floor 1 col shape
         fl2_colShape.onEntityEnterColShape += fl2_enterColShape;
         fl3_colShape.onEntityEnterColShape += fl3_enterColShape;
-
-
+        //fl4_colShape.onEntityEnterColShape += fl4_enterColShape;
         API.onClientEventTrigger += OnClientEvent;
         createMarkers(); //create all markers
     }//main constructor
@@ -72,9 +68,10 @@ public class apartment_menu : Script
     public void createMarkers()
     {
         API.createMarker(1, frontDoor, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //init marker
-        API.createMarker(1, apa1, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 1
-        API.createMarker(1, apa2, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 2
-        API.createMarker(1, apa3, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 3
+        API.createMarker(1, aptPos[1], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 1
+        API.createMarker(1, aptPos[2], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 2
+        API.createMarker(1, aptPos[3], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 3
+        API.createMarker(1, aptPos[4], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //Arcadius Building
     }//create all markers
 
     public void apt_enterColShape(ColShape shape, NetHandle Entity) //enter init shape -- trigger JS create menu
@@ -98,91 +95,55 @@ public class apartment_menu : Script
         API.triggerClientEvent(player, "destroyAptMenu");
     } //exit init col shape
 
+    public void joinRoom(Client player, string eventName) //sheeeiiittt
+    {
+        string aptFlr = eventName.Substring(7, 1); //Floor number of the apartment
+        string aptStr = eventName.Substring(8, 2); //Apartment number (0-8 per floor)
+        int aptInt = Convert.ToInt32(aptStr); //Apt Number ToString
+        int aptFlrInt = Convert.ToInt32(aptFlr); //Apt floor ToString
+
+        if (occupation[aptFlrInt] == 0) //if nobody is inside the floor...
+        {
+            currAptIndex[aptFlrInt] = aptInt; //Set the Apartment index to the int of the apt. (If using apt 6 on floor 1, set  aptFlrInt[1] = 06)
+            API.sendNotificationToPlayer(player, String.Format("Floor {0}, Apartment #:{1}", aptFlr, aptStr) );
+            occupation[aptFlrInt]++; //incriment occupation
+            API.requestIpl(aptArray[aptFlrInt, aptInt]);
+            if (aptFlrInt == 3) //Failsafe -- floor 3 is facing the wrong direction 
+            {
+                player.position = aptPos[aptFlrInt] + new Vector3(-2, 0, 0);
+            }
+            else
+            {
+                player.position = aptPos[aptFlrInt] + new Vector3(2, 0, 0);
+            }
+        }
+        else if (occupation[aptFlrInt] > 0)
+        {
+            if (aptInt == currAptIndex[aptFlrInt])
+            {
+                API.sendNotificationToPlayer(player, "Floor Occupied.");
+                API.sendNotificationToPlayer(player, "Joining active room...");
+                if (aptFlrInt == 3) //Failsafe -- floor 3 is facing the wrong direction 
+                {
+                    player.position = aptPos[aptFlrInt] + new Vector3(-2, 0, 0);
+                }
+                else
+                {
+                    player.position = aptPos[aptFlrInt] + new Vector3(2, 0, 0);
+                }
+                occupation[aptFlrInt]++;
+            }
+            else
+            {
+                API.sendNotificationToPlayer(player, "That floor is occupied!");
+            }
+        }
+
+    }
+
     public void OnClientEvent(Client player, string eventName, params object[] arguments) //player selected menu item triggers
     {
-        string aptFlr = null;
-        string aptStr = null;
-        int aptInt = 0;
-
-        aptFlr = eventName.Substring(7, 1); //Floor number of the apartment
-        aptStr = eventName.Substring(8, 2); //Apartment number (0-8 per floor)
-        aptInt = Convert.ToInt32(aptStr); //Apt Number ToString
-
-        if (aptFlr == "1")
-        {
-            if (occupation[1] == 0) // FLOOR 1
-            {
-                API.requestIpl(fl01_List[Convert.ToInt32(aptStr)]); //Request a floor number using the index of fl01_list
-                currFloor[1] = aptInt;
-                player.position = apa1 + new Vector3(5, 0, 0);
-                API.sendNotificationToPlayer(player, "Floor 1");
-                occupation[1]++; //add a player to the occupation
-            }
-            else if (occupation[1] > 0)
-            {
-                if (aptInt == currFloor[1])
-                {
-                    API.sendNotificationToPlayer(player, "Floor 1 Occupied.");
-                    API.sendNotificationToPlayer(player, "Joining active room...");
-                    player.position = apa1;
-                    occupation[1]++;
-                }
-                else
-                {
-                    API.sendNotificationToPlayer(player, "That floor is occupied!");
-                }
-            }
-        }
-        if (aptFlr == "2")
-        {
-            if (occupation[2] == 0) // FLOOR 2
-            {
-                API.requestIpl(fl02_List[Convert.ToInt32(aptStr)]); //Request a floor number using the index of fl02_list
-                currFloor[2] = aptInt;
-                player.position = apa2 + new Vector3(5, 0, 0);
-                API.sendNotificationToPlayer(player, "Floor 2");
-                occupation[2]++; //add a player to the occupation
-            }
-            else if (occupation[2] > 0)
-            {
-                if (aptInt == currFloor[2])
-                {
-                    API.sendNotificationToPlayer(player, "Floor 2 Occupied.");
-                    API.sendNotificationToPlayer(player, "Joining active room...");
-                    player.position = apa2;
-                    occupation[1]++;
-                }
-                else
-                {
-                    API.sendNotificationToPlayer(player, "That floor is occupied!");
-                }
-            }
-        }
-        if (aptFlr == "3")
-        {
-            if (occupation[3] == 0) // FLOOR 3
-            {
-                API.requestIpl(fl03_List[Convert.ToInt32(aptStr)]); //Request a floor number using the index of fl03_list
-                currFloor[3] = aptInt;
-                player.position = apa3 + new Vector3(-5, 0, 0);
-                API.sendNotificationToPlayer(player, "Floor 3");
-                occupation[3]++; //add a player to the occupation
-            }
-            else if (occupation[3] > 0)
-            {
-                if (aptInt == currFloor[3])
-                {
-                    API.sendNotificationToPlayer(player, "Floor 3 Occupied.");
-                    API.sendNotificationToPlayer(player, "Joining active room...");
-                    player.position = apa3;
-                    occupation[3]++;
-                }
-                else
-                {
-                    API.sendNotificationToPlayer(player, "That floor is occupied!");
-                }
-            }
-        }
+        joinRoom(player, eventName);
     }
 
     public void fl1_entercolShape(ColShape shape, NetHandle Entity)
@@ -191,12 +152,12 @@ public class apartment_menu : Script
         occupation[1]--;
         if (occupation[1] == 0)
         {
-            for (var i = 0; i < fl01_List.Length; i++)
+            for (var i = 0; i < 8; i++)
             {
-                var item = fl01_List[i];
+                var item = aptArray[1, i];
                 API.removeIpl(item);
+                currAptIndex[1] = 0;
             }
-            currFloor[1] = 0;
         }
     } //floor 1
 
@@ -206,14 +167,14 @@ public class apartment_menu : Script
         occupation[2]--;
         if (occupation[2] == 0)
         {
-            for (var i = 0; i < fl02_List.Length; i++)
+            for (var i = 0; i < 8; i++)
             {
-                var item = fl02_List[i];
+                var item = aptArray[2, i];
                 API.removeIpl(item);
+                currAptIndex[2] = 0;
             }
-            currFloor[2] = 0;
         }
-    } //floor 2
+    } //floor 1
 
     public void fl3_enterColShape(ColShape shape, NetHandle Entity)
     {
@@ -221,12 +182,12 @@ public class apartment_menu : Script
         occupation[3]--;
         if (occupation[3] == 0)
         {
-            for (var i = 0; i < fl03_List.Length; i++)
+            for (var i = 0; i < 8; i++)
             {
-                var item = fl03_List[i];
+                var item = aptArray[3, i];
                 API.removeIpl(item);
+                currAptIndex[3] = 0;
             }
-            currFloor[3] = 0;
         }
-    } //floor 3
+    } //floor 1
 }
