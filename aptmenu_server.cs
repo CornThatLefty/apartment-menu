@@ -110,10 +110,12 @@ public class apartment_menu : Script
             API.requestIpl(aptArray[aptFlrInt, aptInt]);
             if (aptFlrInt == 3) //Failsafe -- floor 3 is facing the wrong direction 
             {
+                Thread.Sleep(200);
                 player.position = aptPos[aptFlrInt] + new Vector3(-2, 0, 0);
             }
             else
             {
+                Thread.Sleep(200);
                 player.position = aptPos[aptFlrInt] + new Vector3(2, 0, 0);
             }
         }
@@ -125,10 +127,12 @@ public class apartment_menu : Script
                 API.sendNotificationToPlayer(player, "Joining active room...");
                 if (aptFlrInt == 3) //Failsafe -- floor 3 is facing the wrong direction 
                 {
+                    Thread.Sleep(200);
                     player.position = aptPos[aptFlrInt] + new Vector3(-2, 0, 0);
                 }
                 else
                 {
+                    Thread.Sleep(200);
                     player.position = aptPos[aptFlrInt] + new Vector3(2, 0, 0);
                 }
                 occupation[aptFlrInt]++;
@@ -141,6 +145,22 @@ public class apartment_menu : Script
 
     }
 
+    public void leaveRoom(int flN, NetHandle Entity)
+    {
+        Thread.Sleep(200);
+        API.setEntityPosition(Entity, frontDoor + new Vector3(0, -10, 0));
+        occupation[flN]--;
+        if (occupation[flN] == 0)
+        {
+            for (var i = 0; i < 9; i++)
+            {
+                var item = aptArray[flN, i];
+                API.removeIpl(item);
+                currAptIndex[flN] = 0;
+            }
+        }
+    }
+
     public void OnClientEvent(Client player, string eventName, params object[] arguments) //player selected menu item triggers
     {
         joinRoom(player, eventName);
@@ -148,46 +168,16 @@ public class apartment_menu : Script
 
     public void fl1_entercolShape(ColShape shape, NetHandle Entity)
     {
-        API.setEntityPosition(Entity, frontDoor + new Vector3(0, -10, 0));
-        occupation[1]--;
-        if (occupation[1] == 0)
-        {
-            for (var i = 0; i < 8; i++)
-            {
-                var item = aptArray[1, i];
-                API.removeIpl(item);
-                currAptIndex[1] = 0;
-            }
-        }
+        leaveRoom(1, Entity);
     } //floor 1
 
     public void fl2_enterColShape(ColShape shape, NetHandle Entity)
     {
-        API.setEntityPosition(Entity, frontDoor + new Vector3(0, -10, 0));
-        occupation[2]--;
-        if (occupation[2] == 0)
-        {
-            for (var i = 0; i < 8; i++)
-            {
-                var item = aptArray[2, i];
-                API.removeIpl(item);
-                currAptIndex[2] = 0;
-            }
-        }
+        leaveRoom(2, Entity);
     } //floor 1
 
     public void fl3_enterColShape(ColShape shape, NetHandle Entity)
     {
-        API.setEntityPosition(Entity, frontDoor + new Vector3(0, -10, 0));
-        occupation[3]--;
-        if (occupation[3] == 0)
-        {
-            for (var i = 0; i < 8; i++)
-            {
-                var item = aptArray[3, i];
-                API.removeIpl(item);
-                currAptIndex[3] = 0;
-            }
-        }
+        leaveRoom(3, Entity);
     } //floor 1
 }

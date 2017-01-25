@@ -1,5 +1,4 @@
 ﻿
-//todo : clean shit up, probably use enums or something
 
 menuPool = API.getMenuPool();
 
@@ -43,6 +42,14 @@ let item23 = API.createMenuItem("Aqua Apartment ", "Floor 2");
 let item24 = API.createMenuItem("Aqua Apartment ", "Floor 3");
 
 let item25 = API.createMenuItem("Executive Rich", "Executive Office");
+let item26 = API.createMenuItem("Executive Rich", "Executive Office");
+let item27 = API.createMenuItem("Executive Rich", "Executive Office");
+let item28 = API.createMenuItem("Executive Rich", "Executive Office");
+let item29 = API.createMenuItem("Executive Rich", "Executive Office");
+let item30 = API.createMenuItem("Executive Rich", "Executive Office");
+let item31 = API.createMenuItem("Executive Rich", "Executive Office");
+let item32 = API.createMenuItem("Executive Rich", "Executive Office");
+let item33 = API.createMenuItem("Executive Rich", "Executive Office");
 
 menu.AddItem(sub1);
 menu.AddItem(sub2);
@@ -75,6 +82,14 @@ menu2.AddItem(item23);
 menu3.AddItem(item24);
 
 menu4.AddItem(item25);
+menu4.AddItem(item26);
+menu4.AddItem(item27);
+menu4.AddItem(item28);
+menu4.AddItem(item29);
+menu4.AddItem(item30);
+menu4.AddItem(item31);
+menu4.AddItem(item32);
+menu4.AddItem(item33);
 
 
 let keyDetect = false;
@@ -181,6 +196,30 @@ menu4.OnItemSelect.connect(function (sender, item, index) { //Prefix explanation
     switch (item) {
         case item25:
             API.triggerServerEvent("loadApt401");
+            break;
+        case item26:
+            API.triggerServerEvent("loadApt402");
+            break;
+        case item27:
+            API.triggerServerEvent("loadApt403");
+            break;
+        case item28:
+            API.triggerServerEvent("loadApt404");
+            break;
+        case item29:
+            API.triggerServerEvent("loadApt405");
+            break;
+        case item30:
+            API.triggerServerEvent("loadApt406");
+            break;
+        case item31:
+            API.triggerServerEvent("loadApt407");
+            break;
+        case item32:
+            API.triggerServerEvent("loadApt408");
+            break;
+        case item33:
+            API.triggerServerEvent("loadApt409");
             break;
     }
     menu4.Visible = false;
