@@ -7,3 +7,6 @@ bin/Debug/apartment-menu.pdb
 obj/Debug/apartment-menu.pdb
 *.config
 *.ts
+bin/Debug/GTANetworkServer.exe
+Properties/AssemblyInfo.cs
+obj/Debug
