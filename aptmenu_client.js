@@ -4,80 +4,48 @@
 menuPool = API.getMenuPool();
 
 //Begin main menu -----------------------------------------------------------------------
-let menu = API.createMenu("Apartments", 0, 0, 6);
-let menu1 = API.createMenu("Floor 1", 0, 0, 6);
-let menu2 = API.createMenu("Floor 2", 0, 0, 6);
-let menu3 = API.createMenu("Floor 3", 0, 0, 6);
 
-let sub1 = API.createMenuItem("Floor 1", "");
-let sub2 = API.createMenuItem("Floor 2", "");
-let sub3 = API.createMenuItem("Floor 3", "");
+let aptNames = ["Modern Apartment", "Moody Apartment", "Vibrant Apartment",
+                "Sharp Apartment", "Monochrome Apartment", "Seductive Apartment",
+                "Regal Apartment", "Aqua Apartment"];
 
-let item1 = API.createMenuItem("Modern Apartment", "Floor 1");
-let item2 = API.createMenuItem("Modern Apartment", "Floor 2");
-let item3 = API.createMenuItem("Modern Apartment", "Floor 3");
-let item4 = API.createMenuItem("Moody Apartment", "Floor 1");
-let item5 = API.createMenuItem("Moody Apartment", "Floor 2");
-let item6 = API.createMenuItem("Moody Apartment", "Floor 3");
-let item7 = API.createMenuItem("Vibrant Apartment", "Floor 1");
-let item8 = API.createMenuItem("Vibrant Apartment", "Floor 2");
+function setupMenu(aptNames) {
+  let menu = API.createMenu("Apartments", 0, 0, 6);
+  let floor1Menu = API.createMenu("Floor 1", 0, 0, 6);
+  let floor2Menu = API.createMenu("Floor 2", 0, 0, 6);
+  let floor3Menu = API.createMenu("Floor 3", 0, 0, 6);
 
-let item9 = API.createMenuItem("Vibrant Apartment", "Floor 3");
-let item10 = API.createMenuItem("Sharp Apartment", "Floor 1");
-let item11 = API.createMenuItem("Sharp Apartment", "Floor 2");
-let item12 = API.createMenuItem("Sharp Apartment", "Floor 3");
-let item13 = API.createMenuItem("Monochrome Apartment", "Floor 1");
-let item14 = API.createMenuItem("Monochrome Apartment", "Floor 2");
-let item15 = API.createMenuItem("Monochrome Apartment", "Floor 3");
-let item16 = API.createMenuItem("Seductive Apartment", "Floor 1");
-
-let item17 = API.createMenuItem("Seductive Apartment", "Floor 2");
-let item18 = API.createMenuItem("Seductive Apartment", "Floor 3");
-let item19 = API.createMenuItem("Regal Apartment", "Floor 1");
-let item20 = API.createMenuItem("Regal Apartment", "Floor 2");
-let item21 = API.createMenuItem("Regal Apartment", "Floor 3");
-let item22 = API.createMenuItem("Aqua Apartment ", "Floor 1");
-let item23 = API.createMenuItem("Aqua Apartment ", "Floor 2");
-let item24 = API.createMenuItem("Aqua Apartment ", "Floor 3");
-
-menu.AddItem(sub1);
-menu.AddItem(sub2);
-menu.AddItem(sub3);
-
-menu1.AddItem(item1);
-menu2.AddItem(item2);
-menu3.AddItem(item3);
-menu1.AddItem(item4);
-menu2.AddItem(item5);
-menu3.AddItem(item6);
-menu1.AddItem(item7);
-menu2.AddItem(item8);
-menu3.AddItem(item9);
-menu1.AddItem(item10);
-menu2.AddItem(item11);
-menu3.AddItem(item12);
-menu1.AddItem(item13);
-menu2.AddItem(item14);
-menu3.AddItem(item15);
-menu1.AddItem(item16);
-menu2.AddItem(item17);
-menu3.AddItem(item18);
-menu1.AddItem(item19);
-menu2.AddItem(item20);
-menu3.AddItem(item21);
-menu1.AddItem(item22);
-menu2.AddItem(item23);
-menu3.AddItem(item24);
+  let sub1 = API.createMenuItem("Floor 1", "");
+  let sub2 = API.createMenuItem("Floor 2", "");
+  let sub3 = API.createMenuItem("Floor 3", "");
 
 
+  menu.AddItem(sub1);
+  menu.AddItem(sub2);
+  menu.AddItem(sub3);
+
+  // Loop through all the names.
+  aptNames.forEach(function (name) {
+      tempItem1 = API.createMenuItem(item, "Floor 1"));
+      tempItem2 = API.createMenuItem(item, "Floor 2"));
+      tempItem3 = API.createMenuItem(item, "Floor 3"));
+      floor1Menu.AddItem(tempItem1);
+      floor2Menu.AddItem(tempItem2);
+      floor3Menu.AddItem(tempItem3);
+    }
+
+    menuPool.Add(menu);
+    menuPool.Add(menu1);
+    menuPool.Add(menu2);
+    menuPool.Add(menu3);
+
+}
+
+
+setupMenu(aptNames);
 let keyDetect = false;
 
 //End main menu -----------------------------------------------------------------------
-
-menuPool.Add(menu);
-menuPool.Add(menu1);
-menuPool.Add(menu2);
-menuPool.Add(menu3);
 
 menu1.OnItemSelect.connect(function(sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
     switch (item) {
@@ -179,7 +147,7 @@ menu.OnItemSelect.connect(function (sender, item, index) {
             menu.Visible = false;
             menu2.Visible = true;
             break;
-        case sub3: 
+        case sub3:
             menu.Visible = false;
             menu3.Visible = true;
             break;
@@ -206,7 +174,7 @@ API.onServerEventTrigger.connect(function (eventName, args) { //detects triggers
         case 'createAptMenu':
             keyDetect = true;
             break;
-            
+
 
         case 'destroyAptMenu':
             keyDetect = false;
