@@ -1,8 +1,5 @@
-﻿
-//todo : clean shit up, probably use enums or something
-
-// Debug option
-let debugging = true;
+﻿// Debug option
+let debugging = false;
 
 //Begin main menu -----------------------------------------------------------------------
 
@@ -14,7 +11,7 @@ let aptMenu = null;
 let aptNames =  [
         {
             "name": "Modern Apartment",
-            "floorNum": 3, 
+            "floorNum": 3, // Note: This isn't used yet, maybe won't be used at all.
             "floorData": [
                 "loadApt101",
                 "loadApt201",
@@ -169,7 +166,6 @@ function createAptMenu(aptNames, floorMenus) {
 
         tempMenuIndex++;
         menu.AddItem(mainMenuNameItem);
-
     }
 
     return menu;
@@ -204,12 +200,12 @@ API.onServerEventTrigger.connect(function (eventName, args) { //detects triggers
     switch (eventName) {
 
         case 'createAptMenu':
-            keyDetect = true;
+            debugging = true;
             break;
 
 
         case 'destroyAptMenu':
-            keyDetect = false;
+            debugging = false;
             API.setHudVisible(true);
             menu.Visible = false;
             floor1Menu.Visible = false;
