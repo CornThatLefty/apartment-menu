@@ -207,11 +207,11 @@ API.onServerEventTrigger.connect(function (eventName, args) { //detects triggers
         case 'destroyAptMenu':
             debugging = false;
             API.setHudVisible(true);
-            menu.Visible = false;
-            floor1Menu.Visible = false;
-            floor2Menu.Visible = false;
-            floor3Menu.Visible = false;
-            executiveMenu.Visible = false;
+            aptMenu.Visible = false;
+
+            floorMenus.forEach(function (subMenu) {
+                subMenu.Visible = false;
+            });
 
             break;
     }
