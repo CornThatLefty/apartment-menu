@@ -1,6 +1,8 @@
 ﻿// Debug option
 let debugging = false;
 
+let keyDetect = false;
+
 //Begin main menu -----------------------------------------------------------------------
 
 let menuPool = null;
@@ -99,10 +101,10 @@ let aptNames =  [
     ]
 
 setupMenus(aptNames);
-  
+
 function setupMenus(aptNames) {
     menuPool = API.getMenuPool();
-    
+
     floorMenus = createFloorMenus(aptNames);
 
     floorMenus.forEach(function (subMenu) {
@@ -121,7 +123,9 @@ function createFloorMenus(aptNames) {
     aptNames.forEach(function (apt) {
         // Create the floor menus of apartments.
 
-        API.sendChatMessage(apt.name);
+        if (debugging) {
+          API.sendChatMessage(apt.name);
+        }
         tempFloorMenu = API.createMenu(apt.name, "Floor Selection", 0, 0, 6);
 
         for (let i = 0; i < apt.floorData.length; i++) {
@@ -154,9 +158,7 @@ function createAptMenu(aptNames, floorMenus) {
 
         // Assign floor menu to each apartment menu item.
         mainMenuNameItem.Activated.connect(function (menu, item) {
-            // opens floor menu 
-            API.sendChatMessage(i.toString());
-
+            // opens floor menu
             menu.Visible = false;
 
             floorMenus[i].Visible = true;
@@ -172,7 +174,7 @@ function createAptMenu(aptNames, floorMenus) {
 
 
 API.onKeyDown.connect(function (sender, e) {
-    if (debugging) {
+    if (keyDetect) {
         if (!aptMenu.Visible && e.KeyCode == Keys.E && !API.isChatOpen()) {
             aptMenu.Visible = true;
 
@@ -197,12 +199,12 @@ API.onServerEventTrigger.connect(function (eventName, args) { //detects triggers
     switch (eventName) {
 
         case 'createAptMenu':
-            debugging = true;
+            keyDetect = true;
             break;
 
 
         case 'destroyAptMenu':
-            debugging = false;
+            keyDetect = false;
             API.setHudVisible(true);
             aptMenu.Visible = false;
 
@@ -217,4 +219,3 @@ API.onServerEventTrigger.connect(function (eventName, args) { //detects triggers
 API.onUpdate.connect(function (sender, events) {
     menuPool.ProcessMenus();
 });
-        
