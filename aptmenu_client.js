@@ -146,8 +146,6 @@ function createFloorMenus(aptNames) {
 function createAptMenu(aptNames, floorMenus) {
     let menu = API.createMenu("Apartments", 0, 0, 6);
 
-    let tempMenuIndex = 0;
-
     // Loop through all the apartments
     for(let i = 0; i < aptNames.length; i++) {
         // Create the main menu of apartments.
@@ -164,7 +162,6 @@ function createAptMenu(aptNames, floorMenus) {
             floorMenus[i].Visible = true;
         });
 
-        tempMenuIndex++;
         menu.AddItem(mainMenuNameItem);
     }
 
