@@ -1,260 +1,195 @@
-﻿
-
-menuPool = API.getMenuPool();
-
-//Begin main menu -----------------------------------------------------------------------
-let menu = API.createMenu("Apartments", 0, 0, 6);
-let menu1 = API.createMenu("Floor 1", 0, 0, 6);
-let menu2 = API.createMenu("Floor 2", 0, 0, 6);
-let menu3 = API.createMenu("Floor 3", 0, 0, 6);
-let menu4 = API.createMenu("Arcadius Building", 0, 0, 6);
-
-let sub1 = API.createMenuItem("Floor 1", "");
-let sub2 = API.createMenuItem("Floor 2", "");
-let sub3 = API.createMenuItem("Floor 3", "");
-let sub4 = API.createMenuItem("Arcadius Building", "");
-
-let item1 = API.createMenuItem("Modern Apartment", "Floor 1");
-let item2 = API.createMenuItem("Modern Apartment", "Floor 2");
-let item3 = API.createMenuItem("Modern Apartment", "Floor 3");
-let item4 = API.createMenuItem("Moody Apartment", "Floor 1");
-let item5 = API.createMenuItem("Moody Apartment", "Floor 2");
-let item6 = API.createMenuItem("Moody Apartment", "Floor 3");
-let item7 = API.createMenuItem("Vibrant Apartment", "Floor 1");
-let item8 = API.createMenuItem("Vibrant Apartment", "Floor 2");
-
-let item9 = API.createMenuItem("Vibrant Apartment", "Floor 3");
-let item10 = API.createMenuItem("Sharp Apartment", "Floor 1");
-let item11 = API.createMenuItem("Sharp Apartment", "Floor 2");
-let item12 = API.createMenuItem("Sharp Apartment", "Floor 3");
-let item13 = API.createMenuItem("Monochrome Apartment", "Floor 1");
-let item14 = API.createMenuItem("Monochrome Apartment", "Floor 2");
-let item15 = API.createMenuItem("Monochrome Apartment", "Floor 3");
-let item16 = API.createMenuItem("Seductive Apartment", "Floor 1");
-
-let item17 = API.createMenuItem("Seductive Apartment", "Floor 2");
-let item18 = API.createMenuItem("Seductive Apartment", "Floor 3");
-let item19 = API.createMenuItem("Regal Apartment", "Floor 1");
-let item20 = API.createMenuItem("Regal Apartment", "Floor 2");
-let item21 = API.createMenuItem("Regal Apartment", "Floor 3");
-let item22 = API.createMenuItem("Aqua Apartment ", "Floor 1");
-let item23 = API.createMenuItem("Aqua Apartment ", "Floor 2");
-let item24 = API.createMenuItem("Aqua Apartment ", "Floor 3");
-
-let item25 = API.createMenuItem("Executive Rich", "Executive Office");
-let item26 = API.createMenuItem("Executive Rich", "Executive Office");
-let item27 = API.createMenuItem("Executive Rich", "Executive Office");
-let item28 = API.createMenuItem("Executive Rich", "Executive Office");
-let item29 = API.createMenuItem("Executive Rich", "Executive Office");
-let item30 = API.createMenuItem("Executive Rich", "Executive Office");
-let item31 = API.createMenuItem("Executive Rich", "Executive Office");
-let item32 = API.createMenuItem("Executive Rich", "Executive Office");
-let item33 = API.createMenuItem("Executive Rich", "Executive Office");
-
-menu.AddItem(sub1);
-menu.AddItem(sub2);
-menu.AddItem(sub3);
-menu.AddItem(sub4);
-
-menu1.AddItem(item1);
-menu2.AddItem(item2);
-menu3.AddItem(item3);
-menu1.AddItem(item4);
-menu2.AddItem(item5);
-menu3.AddItem(item6);
-menu1.AddItem(item7);
-menu2.AddItem(item8);
-menu3.AddItem(item9);
-menu1.AddItem(item10);
-menu2.AddItem(item11);
-menu3.AddItem(item12);
-menu1.AddItem(item13);
-menu2.AddItem(item14);
-menu3.AddItem(item15);
-menu1.AddItem(item16);
-menu2.AddItem(item17);
-menu3.AddItem(item18);
-menu1.AddItem(item19);
-menu2.AddItem(item20);
-menu3.AddItem(item21);
-menu1.AddItem(item22);
-menu2.AddItem(item23);
-menu3.AddItem(item24);
-
-menu4.AddItem(item25);
-menu4.AddItem(item26);
-menu4.AddItem(item27);
-menu4.AddItem(item28);
-menu4.AddItem(item29);
-menu4.AddItem(item30);
-menu4.AddItem(item31);
-menu4.AddItem(item32);
-menu4.AddItem(item33);
-
+﻿// Debug option
+let debugging = false;
 
 let keyDetect = false;
 
+//Begin main menu -----------------------------------------------------------------------
+
+let menuPool = null;
+
+let floorMenus = [];
+let aptMenu = null;
+//Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
+let aptNames =  [
+        {
+            "name": "Modern Apartment",
+            "floorNum": 3, // Note: This isn't used yet, maybe won't be used at all.
+            "floorData": [
+                "loadApt101",
+                "loadApt201",
+                "loadApt301"
+            ],
+        },
+        {
+            "name": "Moody Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt102",
+                "loadApt202",
+                "loadApt302",
+            ],
+        },
+        {
+            "name": "Vibrant Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt103",
+                "loadApt203",
+                "loadApt303",
+            ],
+        },
+        {
+            "name": "Sharp Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt104",
+                "loadApt204",
+                "loadApt304",
+            ],
+        },
+        {
+            "name": "Monochrome Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt105",
+                "loadApt205",
+                "loadApt305",
+            ],
+        },
+        {
+            "name": "Seductive Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt106",
+                "loadApt206",
+                "loadApt306",
+            ],
+        },
+        {
+            "name": "Regal Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt107",
+                "loadApt207",
+                "loadApt307",
+            ],
+        },
+        {
+            "name": "Aqua Apartment",
+            "floorNum": 3,
+            "floorData": [
+                "loadApt108",
+                "loadApt208",
+                "loadApt308",
+            ],
+        },
+        {
+            "name": "Executive Rich",
+            "floorNum": 9,
+            "floorData": [
+                "loadApt401",
+                "loadApt402",
+                "loadApt403",
+                "loadApt404",
+                "loadApt405",
+                "loadApt406",
+                "loadApt407",
+                "loadApt408",
+                "loadApt409",
+            ],
+        }
+    ]
+
+setupMenus(aptNames);
+
+function setupMenus(aptNames) {
+    menuPool = API.getMenuPool();
+
+    floorMenus = createFloorMenus(aptNames);
+
+    floorMenus.forEach(function (subMenu) {
+        menuPool.Add(subMenu);
+    });
+
+    aptMenu = createAptMenu(aptNames, floorMenus);
+    menuPool.Add(aptMenu);
+}
+
+function createFloorMenus(aptNames) {
+
+    let floorMenus = [];
+
+    // Loop through all the apartments
+    aptNames.forEach(function (apt) {
+        // Create the floor menus of apartments.
+
+        if (debugging) {
+          API.sendChatMessage(apt.name);
+        }
+        tempFloorMenu = API.createMenu(apt.name, "Floor Selection", 0, 0, 6);
+
+        for (let i = 0; i < apt.floorData.length; i++) {
+            floorMenuItem = API.createMenuItem("Floor " + (i + 1), "");
+
+            // Assign load function to the item.
+            floorMenuItem.Activated.connect(function (menu, item) {
+                API.triggerServerEvent(apt.floorData[i]);
+
+                menu.Visible = false;
+            });
+
+            tempFloorMenu.AddItem(floorMenuItem);
+        }
+
+        floorMenus.push(tempFloorMenu);
+    });
+
+    return floorMenus;
+}
+
+function createAptMenu(aptNames, floorMenus) {
+    let menu = API.createMenu("Apartments", 0, 0, 6);
+
+    // Loop through all the apartments
+    for(let i = 0; i < aptNames.length; i++) {
+        // Create the main menu of apartments.
+
+        mainMenuNameItem = API.createMenuItem(aptNames[i].name, "");
+
+        // Assign floor menu to each apartment menu item.
+        mainMenuNameItem.Activated.connect(function (menu, item) {
+            // opens floor menu
+            menu.Visible = false;
+
+            floorMenus[i].Visible = true;
+        });
+
+        menu.AddItem(mainMenuNameItem);
+    }
+
+    return menu;
+}
+
 //End main menu -----------------------------------------------------------------------
 
-menuPool.Add(menu);
-menuPool.Add(menu1);
-menuPool.Add(menu2);
-menuPool.Add(menu3);
-menuPool.Add(menu4);
-
-menu1.OnItemSelect.connect(function(sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
-    switch (item) {
-        case item1:
-            API.triggerServerEvent("loadApt101");
-            break;
-        case item4:
-            API.triggerServerEvent("loadApt102");
-            break;
-        case item7:
-            API.triggerServerEvent("loadApt103");
-            break;
-        case item10:
-            API.triggerServerEvent("loadApt104");
-            break;
-        case item13:
-            API.triggerServerEvent("loadApt105");
-            break;
-        case item16:
-            API.triggerServerEvent("loadApt106");
-            break;
-        case item19:
-            API.triggerServerEvent("loadApt107");
-            break;
-        case item22:
-            API.triggerServerEvent("loadApt108");
-            break;
-    }
-    menu1.Visible = false;
-});
-
-menu2.OnItemSelect.connect(function (sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
-    switch (item) {
-        case item2:
-            API.triggerServerEvent("loadApt201");
-            break;
-        case item5:
-            API.triggerServerEvent("loadApt202");
-            break;
-        case item8:
-            API.triggerServerEvent("loadApt203");
-            break;
-        case item11:
-            API.triggerServerEvent("loadApt204");
-            break;
-        case item14:
-            API.triggerServerEvent("loadApt205");
-            break;
-        case item17:
-            API.triggerServerEvent("loadApt206");
-            break;
-        case item20:
-            API.triggerServerEvent("loadApt207");
-            break;
-        case item23:
-            API.triggerServerEvent("loadApt208");
-            break;
-    }
-    menu2.Visible = false;
-});
-
-menu3.OnItemSelect.connect(function (sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
-    switch (item) {
-        case item3:
-            API.triggerServerEvent("loadApt301");
-            break;
-        case item6:
-            API.triggerServerEvent("loadApt302");
-            break;
-        case item9:
-            API.triggerServerEvent("loadApt303");
-            break;
-        case item12:
-            API.triggerServerEvent("loadApt304");
-            break;
-        case item15:
-            API.triggerServerEvent("loadApt305");
-            break;
-        case item18:
-            API.triggerServerEvent("loadApt306");
-            break;
-        case item21:
-            API.triggerServerEvent("loadApt307");
-            break;
-        case item24:
-            API.triggerServerEvent("loadApt308");
-            break;
-    }
-    menu3.Visible = false;
-});
-
-menu4.OnItemSelect.connect(function (sender, item, index) { //Prefix explanation -- 1st #:Floor number; 2nd and 3rd #: Apt number
-    switch (item) {
-        case item25:
-            API.triggerServerEvent("loadApt401");
-            break;
-        case item26:
-            API.triggerServerEvent("loadApt402");
-            break;
-        case item27:
-            API.triggerServerEvent("loadApt403");
-            break;
-        case item28:
-            API.triggerServerEvent("loadApt404");
-            break;
-        case item29:
-            API.triggerServerEvent("loadApt405");
-            break;
-        case item30:
-            API.triggerServerEvent("loadApt406");
-            break;
-        case item31:
-            API.triggerServerEvent("loadApt407");
-            break;
-        case item32:
-            API.triggerServerEvent("loadApt408");
-            break;
-        case item33:
-            API.triggerServerEvent("loadApt409");
-            break;
-    }
-    menu4.Visible = false;
-});
-
-menu.OnItemSelect.connect(function (sender, item, index) {
-    switch (item) {
-        case sub1:
-            menu.Visible = false;
-            menu1.Visible = true;
-            break;
-        case sub2:
-            menu.Visible = false;
-            menu2.Visible = true;
-            break;
-        case sub3: 
-            menu.Visible = false;
-            menu3.Visible = true;
-            break;
-        case sub4:
-            menu.Visible = false;
-            menu4.Visible = true;
-            break;
-    }
-    API.showCursor(false);
-    menu.Visible = false;
-});
 
 API.onKeyDown.connect(function (sender, e) {
-    if (keyDetect == true) {
-        if (e.KeyCode == Keys.E) {
-            menu.Visible = true;
-            menu1.Visible = false;
-            menu2.Visible = false;
-            menu3.Visible = false;
+    if (keyDetect) {
+        if (!aptMenu.Visible && e.KeyCode == Keys.E && !API.isChatOpen()) {
+            aptMenu.Visible = true;
+
+            floorMenus.forEach(function (subMenu) {
+                subMenu.Visible = false;
+            });
+
+            API.showCursor(false);
+        } else if (e.KeyCode == Keys.E && !API.isChatOpen()){
+            aptMenu.Visible = false;
+
+            floorMenus.forEach(function (subMenu) {
+                subMenu.Visible = false;
+            });
+
             API.showCursor(false);
         }
     }
@@ -266,15 +201,16 @@ API.onServerEventTrigger.connect(function (eventName, args) { //detects triggers
         case 'createAptMenu':
             keyDetect = true;
             break;
-            
+
 
         case 'destroyAptMenu':
             keyDetect = false;
             API.setHudVisible(true);
-            menu.Visible = false;
-            menu1.Visible = false;
-            menu2.Visible = false;
-            menu3.Visible = false;
+            aptMenu.Visible = false;
+
+            floorMenus.forEach(function (subMenu) {
+                subMenu.Visible = false;
+            });
 
             break;
     }

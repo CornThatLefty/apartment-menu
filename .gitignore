@@ -1,12 +1,10 @@
 *.csproj
 *.suo
 *.dll
-bin/Debug/apartment-menu.pdb
+bin/*
+obj/*
+Properties/*
 *.txt
 *.cache
-obj/Debug/apartment-menu.pdb
 *.config
 *.ts
-bin/Debug/GTANetworkServer.exe
-Properties/AssemblyInfo.cs
-obj/Debug
