@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +23,9 @@ public class apartment_menu : Script
 
     Vector3[] aptPos = new Vector3[]
     {
-        new Vector3(0, 0, 0), new Vector3(-786.8663, 315.7642, 216.6385), new Vector3(-786.9563, 315.6229, 186.9136), new Vector3(-774.0126, 342.0428, 195.6864), new Vector3(-141.19, -620.91, 168.82)
+        new Vector3(0, 0, 0), new Vector3(-786.8663, 315.7642, 216.6385), 
+        new Vector3(-786.9563, 315.6229, 186.9136), new Vector3(-774.0126, 342.0428, 195.6864), 
+        new Vector3(-141.19, -620.91, 168.82), new  Vector3 (-141.19, -620.91, 167.8204)
     };
 
     int[] occupation = new int[]
@@ -54,13 +56,13 @@ public class apartment_menu : Script
         var fl1_colShape = API.createCylinderColShape(aptPos[1], 1f, 2); //floor 1 col shape
         var fl2_colShape = API.createCylinderColShape(aptPos[2], 1f, 2); //floor 2 col shape
         var fl3_colShape = API.createCylinderColShape(aptPos[3], 1f, 2); //floor 3 col shape
-        var fl4_colShape = API.createCylinderColShape(aptPos[3], 1f, 2);
+        var fl4_colShape = API.createCylinderColShape(aptPos[5], 1f, 2);
         apt_colShape.onEntityEnterColShape += apt_enterColShape; //Enter init col shape
         apt_colShape.onEntityExitColShape += apt_exitColShape; //Exit init col shape
         fl1_colShape.onEntityEnterColShape += fl1_entercolShape; //floor 1 col shape
         fl2_colShape.onEntityEnterColShape += fl2_enterColShape;
         fl3_colShape.onEntityEnterColShape += fl3_enterColShape;
-        //fl4_colShape.onEntityEnterColShape += fl4_enterColShape;
+        fl4_colShape.onEntityEnterColShape += fl4_enterColShape;
         API.onClientEventTrigger += OnClientEvent;
         createMarkers(); //create all markers
     }//main constructor
@@ -71,7 +73,7 @@ public class apartment_menu : Script
         API.createMarker(1, aptPos[1], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 1
         API.createMarker(1, aptPos[2], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 2
         API.createMarker(1, aptPos[3], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //floor 3
-        API.createMarker(1, aptPos[4], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //Arcadius Building
+        API.createMarker(1, aptPos[5], new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 1, 1), 100, 255, 255, 0, 0); //Arcadius Building
     }//create all markers
 
     public void apt_enterColShape(ColShape shape, NetHandle Entity) //enter init shape -- trigger JS create menu
@@ -179,5 +181,9 @@ public class apartment_menu : Script
     public void fl3_enterColShape(ColShape shape, NetHandle Entity)
     {
         leaveRoom(3, Entity);
+    } //floor 1
+    public void fl4_enterColShape(ColShape shape, NetHandle Entity)
+    {
+        leaveRoom(4, Entity);
     } //floor 1
 }
