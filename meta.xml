@@ -2,4 +2,12 @@
     <info name="Apartment Menu" author="Pringus" type="script" />
     <script src="aptmenu_server.cs" type="server" lang="csharp" />
 	<script src="aptmenu_client.js" type="client" lang="javascript" />
+	
+	<script src="menu/apartments.js" type="client" lang="javascript" />
+	<script src="menu/arcadius.js" type="client" lang="javascript" />
+	<script src="menu/clubhousewh.js" type="client" lang="javascript" />
+	<script src="menu/lombank.js" type="client" lang="javascript" />
+	<script src="menu/mainmenu.js" type="client" lang="javascript" />
+	<script src="menu/mazebank.js" type="client" lang="javascript" />
+	<script src="menu/mazebankwest.js" type="client" lang="javascript" />
 </meta>
